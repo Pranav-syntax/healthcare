@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessment History - Medical Risk Assessment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="dashboard-body">
+    <nav class="navbar">
+        <div class="nav-brand">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" stroke-width="2"/>
+            </svg>
+            <span>Medical Risk Assessment</span>
+        </div>
+        <div class="nav-menu">
+            <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+            <a href="{{ url_for('symptom_checker') }}" class="nav-link">New Check</a>
+            <a href="{{ url_for('logout') }}" class="btn btn-outline">Logout</a>
+        </div>
+    </nav>
+
+    <div class="dashboard-content">
+        <div class="history-container">
+            <h1>📋 Assessment History</h1>
+            
+            {% if assessments %}
+                <div class="history-list">
+                    {% for assessment in assessments %}
+                    <div class="history-card">
+                        <div class="history-header">
+                            <h3>Assessment #{{ assessment.assessment_id }}</h3>
+                            <span class="date">{{ assessment.assessment_date.strftime('%B %d, %Y at %I:%M %p') }}</span>
+                        </div>
+                        <div class="history-body">
+                            <div class="history-symptoms">
+                                <strong>Symptoms:</strong>
+                                {% for symptom in assessment.selected_symptoms %}
+                                    <span class="symptom-badge-small">{{ symptom.replace('_', ' ').title() }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="history-result">
+                                <span class="result-label">Predicted Condition:</span>
+                                <span class="result-disease">{{ assessment.predicted_disease }}</span>
+                                <span class="result-match">{{ assessment.match_percentage }}% match</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" stroke-width="2"/>
+                    </svg>
+                    <h3>No assessments yet</h3>
+                    <p>Start your first health assessment</p>
+                    <a href="{{ url_for('symptom_checker') }}" class="btn btn-primary">Start Assessment</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

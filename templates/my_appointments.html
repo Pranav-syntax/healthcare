@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Appointments - Medical Risk Assessment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="dashboard-body">
+    <nav class="navbar">
+        <div class="nav-brand">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" stroke-width="2"/>
+            </svg>
+            <span>Medical Risk Assessment</span>
+        </div>
+        <div class="nav-menu">
+            <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+            <a href="{{ url_for('symptom_checker') }}" class="nav-link">New Check</a>
+            <a href="{{ url_for('logout') }}" class="btn btn-outline">Logout</a>
+        </div>
+    </nav>
+
+    <div class="dashboard-content">
+        <div class="appointments-container">
+            <div class="page-header">
+                <h1>📅 My Appointments</h1>
+                <a href="{{ url_for('symptom_checker') }}" class="btn btn-primary">
+                    New Assessment
+                </a>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            {% if appointments %}
+                <div class="appointments-list">
+                    {% for appointment in appointments %}
+                    <div class="appointment-card status-{{ appointment.status.lower() }}">
+                        <div class="appointment-header">
+                            <div class="appointment-id">
+                                <span class="label">Appointment</span>
+                                <span class="id-number">#{{ appointment.appointment_id }}</span>
+                            </div>
+                            <span class="status-badge status-{{ appointment.status.lower() }}">
+                                {{ appointment.status }}
+                            </span>
+                        </div>
+
+                        <div class="appointment-body">
+                            <div class="appointment-date-time">
+                                <div class="date-block">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke-width="2"/>
+                                        <line x1="16" y1="2" x2="16" y2="6" stroke-width="2" stroke-linecap="round"/>
+                                        <line x1="8" y1="2" x2="8" y2="6" stroke-width="2" stroke-linecap="round"/>
+                                        <line x1="3" y1="10" x2="21" y2="10" stroke-width="2"/>
+                                    </svg>
+                                    <div>
+                                        <span class="date">{{ appointment.appointment_date.strftime('%B %d, %Y') }}</span>
+                                        <span class="time">{{ appointment.formatted_time }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="appointment-doctor">
+                                <div class="doctor-avatar-small">
+                                    {{ appointment.doctor_name[4:6] }}
+                                </div>
+                                <div class="doctor-details-small">
+                                    <h3>{{ appointment.doctor_name }}</h3>
+                                    <p class="specialization">{{ appointment.specialization_name }}</p>
+                                    <p class="hospital">{{ appointment.hospital_name }}, {{ appointment.city }}</p>
+                                </div>
+                            </div>
+
+                            <div class="appointment-info">
+                                <div class="info-row">
+                                    <span class="info-label">Condition:</span>
+                                    <span class="info-value">{{ appointment.disease_name }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Symptoms:</span>
+                                    <div class="symptoms-inline">
+                                        {% for symptom in appointment.symptoms[:3] %}
+                                        <span class="symptom-badge-small">{{ symptom.replace('_', ' ').title() }}</span>
+                                        {% endfor %}
+                                        {% if appointment.symptoms|length > 3 %}
+                                        <span class="symptom-badge-small">+{{ appointment.symptoms|length - 3 }} more</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if appointment.notes %}
+                                <div class="info-row">
+                                    <span class="info-label">Notes:</span>
+                                    <span class="info-value">{{ appointment.notes }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="appointment-footer">
+                                <span class="booked-date">
+                                    Booked on {{ appointment.created_at.strftime('%b %d, %Y') }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke-width="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="8" y1="2" x2="8" y2="6" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="3" y1="10" x2="21" y2="10" stroke-width="2"/>
+                    </svg>
+                    <h3>No appointments yet</h3>
+                    <p>Start a health assessment to find and book doctors</p>
+                    <a href="{{ url_for('symptom_checker') }}" class="btn btn-primary">
+                        Start Assessment
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

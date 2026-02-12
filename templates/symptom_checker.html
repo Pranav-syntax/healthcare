@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symptom Checker - Medical Risk Assessment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="dashboard-body">
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" stroke-width="2"/>
+            </svg>
+            <span>Medical Risk Assessment</span>
+        </div>
+        <div class="nav-menu">
+            <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+            <a href="{{ url_for('history') }}" class="nav-link">History</a>
+            <a href="{{ url_for('logout') }}" class="btn btn-outline">Logout</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="dashboard-content">
+        <div class="symptom-checker-container">
+            <div class="checker-header">
+                <h1>🩺 Symptom Checker</h1>
+                <p>Select all symptoms you are experiencing</p>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('predict') }}" class="symptom-form">
+                <div class="symptoms-grid">
+                    {% for symptom in symptoms %}
+                    <div class="symptom-card">
+                        <input type="checkbox" id="{{ symptom }}" name="symptoms" value="{{ symptom }}">
+                        <label for="{{ symptom }}">
+                            <div class="symptom-icon">
+                                {% if symptom == 'fever' %}
+                                    🌡️
+                                {% elif symptom == 'headache' %}
+                                    🤕
+                                {% elif symptom == 'nausea' %}
+                                    🤢
+                                {% elif symptom == 'vomiting' %}
+                                    🤮
+                                {% elif symptom == 'fatigue' %}
+                                    😴
+                                {% elif symptom == 'joint_pain' %}
+                                    🦴
+                                {% elif symptom == 'skin_rash' %}
+                                    🔴
+                                {% elif symptom == 'cough' %}
+                                    😷
+                                {% elif symptom == 'weight_loss' %}
+                                    ⚖️
+                                {% elif symptom == 'yellow_eyes' %}
+                                    👁️
+                                {% endif %}
+                            </div>
+                            <span class="symptom-name">{{ symptom.replace('_', ' ').title() }}</span>
+                            <div class="checkmark">✓</div>
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-large">
+                        <span>Analyze Symptoms</span>
+                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M5 12h14M12 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Add visual feedback for checkbox selection
+        document.querySelectorAll('.symptom-card input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    this.closest('.symptom-card').classList.add('selected');
+                } else {
+                    this.closest('.symptom-card').classList.remove('selected');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Appointment - Medical Risk Assessment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="dashboard-body">
+    <nav class="navbar">
+        <div class="nav-brand">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" stroke-width="2"/>
+            </svg>
+            <span>Medical Risk Assessment</span>
+        </div>
+        <div class="nav-menu">
+            <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+            <a href="{{ url_for('logout') }}" class="btn btn-outline">Logout</a>
+        </div>
+    </nav>
+
+    <div class="dashboard-content">
+        <div class="booking-container">
+            <h1>📅 Book Appointment</h1>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="booking-layout">
+                <!-- Doctor Info Card -->
+                <div class="doctor-summary-card">
+                    <div class="doctor-avatar-large">
+                        {{ doctor.full_name[4:6] }}
+                    </div>
+                    <h2>{{ doctor.full_name }}</h2>
+                    <p class="specialization">{{ doctor.specialization_name }}</p>
+                    <div class="rating-large">
+                        ⭐ {{ doctor.rating }} <span>({{ doctor.total_reviews }} reviews)</span>
+                    </div>
+                    <div class="summary-details">
+                        <p><strong>Hospital:</strong> {{ doctor.hospital_name }}</p>
+                        <p><strong>Location:</strong> {{ doctor.city }}, {{ doctor.state }}</p>
+                        <p><strong>Experience:</strong> {{ doctor.experience_years }} years</p>
+                        <p><strong>Fee:</strong> ₹{{ doctor.consultation_fee }}</p>
+                    </div>
+                </div>
+
+                <!-- Booking Form -->
+                <div class="booking-form-card">
+                    <h3>Appointment Details</h3>
+                    <form method="POST" action="{{ url_for('book_appointment', doctor_id=doctor.doctor_id, assessment_id=assessment_id) }}">
+                        <div class="form-group">
+                            <label for="appointment_date">Appointment Date</label>
+                            <input type="date" id="appointment_date" name="appointment_date" 
+                                   min="{{ min_date }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="appointment_time">Preferred Time</label>
+                            <select id="appointment_time" name="appointment_time" required>
+                                <option value="">Select Time Slot</option>
+                                <option value="09:00:00">09:00 AM</option>
+                                <option value="10:00:00">10:00 AM</option>
+                                <option value="11:00:00">11:00 AM</option>
+                                <option value="12:00:00">12:00 PM</option>
+                                <option value="14:00:00">02:00 PM</option>
+                                <option value="15:00:00">03:00 PM</option>
+                                <option value="16:00:00">04:00 PM</option>
+                                <option value="17:00:00">05:00 PM</option>
+                                <option value="18:00:00">06:00 PM</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="notes">Additional Notes (Optional)</label>
+                            <textarea id="notes" name="notes" rows="4" 
+                                      placeholder="Any specific concerns or symptoms you'd like to mention..."></textarea>
+                        </div>
+
+                        <div class="booking-summary">
+                            <h4>Booking Summary</h4>
+                            <p><strong>Disease:</strong> {{ disease_name }}</p>
+                            <p><strong>Symptoms:</strong> {{ symptoms|join(', ') }}</p>
+                            <p><strong>Consultation Fee:</strong> ₹{{ doctor.consultation_fee }}</p>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block btn-large">
+                            Confirm Appointment
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

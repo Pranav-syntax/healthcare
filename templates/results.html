@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessment Results - Medical Risk Assessment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="dashboard-body">
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" stroke-width="2"/>
+            </svg>
+            <span>Medical Risk Assessment</span>
+        </div>
+        <div class="nav-menu">
+            <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+            <a href="{{ url_for('symptom_checker') }}" class="nav-link">New Check</a>
+            <a href="{{ url_for('logout') }}" class="btn btn-outline">Logout</a>
+        </div>
+    </nav>
+
+    <!-- Results Content -->
+    <div class="dashboard-content">
+        <div class="results-container">
+            <div class="results-header">
+                <h1>📊 Assessment Results</h1>
+                <p>Assessment ID: #{{ assessment_id }}</p>
+            </div>
+
+            <!-- Selected Symptoms -->
+            <div class="results-section">
+                <h2>Your Symptoms</h2>
+                <div class="selected-symptoms">
+                    {% for symptom in selected_symptoms %}
+                    <span class="symptom-badge">{{ symptom.replace('_', ' ').title() }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Disease Predictions -->
+            <div class="results-section">
+                <h2>Possible Conditions</h2>
+                <div class="predictions-list">
+                    {% for match in matches %}
+                    <div class="prediction-card {% if loop.index == 1 %}top-match{% endif %}">
+                        <div class="prediction-header">
+                            <h3>{{ match.disease }}</h3>
+                            {% if loop.index == 1 %}
+                            <span class="badge badge-primary">Top Match</span>
+                            {% endif %}
+                        </div>
+                        <div class="prediction-stats">
+                            <div class="stat">
+                                <span class="stat-label">Match Percentage</span>
+                                <span class="stat-value">{{ match.match_percentage }}%</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Matched Symptoms</span>
+                                <span class="stat-value">{{ match.matched_symptoms }}/{{ match.total_selected }}</span>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: {{ match.match_percentage }}%"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Book Appointment CTA -->
+            <div class="appointment-cta">
+                <div class="cta-content">
+                    <div class="cta-icon">👨‍⚕️</div>
+                    <div class="cta-text">
+                        <h3>Need Medical Consultation?</h3>
+                        <p>Book an appointment with top-rated specialists in your area</p>
+                    </div>
+                </div>
+                <a href="{{ url_for('find_doctors', assessment_id=assessment_id) }}" class="btn btn-primary btn-large">
+                    <span>Find Doctors & Book Appointment</span>
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M5 12h14M12 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+            </div>
+
+            <!-- Disclaimer -->
+            <div class="disclaimer">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                    <path d="M12 8v4M12 16h.01" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <div>
+                    <strong>Medical Disclaimer:</strong>
+                    <p>This is an automated assessment tool and should not replace professional medical advice. Please consult with a qualified healthcare provider for proper diagnosis and treatment.</p>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="results-actions">
+                <a href="{{ url_for('symptom_checker') }}" class="btn btn-secondary">
+                    New Assessment
+                </a>
+                <a href="{{ url_for('history') }}" class="btn btn-outline">
+                    View History
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
