@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Medical Risk Assessment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-box admin-auth-box">
+            <div class="auth-header">
+                <svg class="auth-icon admin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <circle cx="12" cy="12" r="3" stroke-width="2"/>
+                    <path d="M12 1v6m0 6v6m5.66-14.66l-4.24 4.24m0 6.84l4.24 4.24M23 12h-6m-6 0H1m20.66 5.66l-4.24-4.24m0-6.84l4.24-4.24" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <h1>Administrator Login</h1>
+                <p>Access system reports and management</p>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('admin_login') }}" class="auth-form">
+                <div class="form-group">
+                    <label for="email">Admin Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter admin email" required autofocus>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Admin Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter admin password" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block admin-btn">
+                    🔐 Admin Login
+                </button>
+            </form>
+
+            <div class="auth-links">
+                <p><a href="{{ url_for('login') }}">← Back to User Login</a></p>
+            </div>
+
+            <div class="admin-notice">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                    <path d="M12 16v-4M12 8h.01" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <p>This area is restricted to authorized administrators only. Unauthorized access attempts will be logged.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

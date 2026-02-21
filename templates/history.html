@@ -23,7 +23,22 @@
 
     <div class="dashboard-content">
         <div class="history-container">
-            <h1>📋 Assessment History</h1>
+            <div class="page-header">
+                <h1>📋 Assessment History</h1>
+                <a href="{{ url_for('symptom_checker') }}" class="btn btn-primary">
+                    New Assessment
+                </a>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
             
             {% if assessments %}
                 <div class="history-list">
@@ -41,9 +56,27 @@
                                 {% endfor %}
                             </div>
                             <div class="history-result">
-                                <span class="result-label">Predicted Condition:</span>
-                                <span class="result-disease">{{ assessment.predicted_disease }}</span>
+                                <div>
+                                    <span class="result-label">Predicted Condition:</span>
+                                    <span class="result-disease">{{ assessment.predicted_disease }}</span>
+                                </div>
                                 <span class="result-match">{{ assessment.match_percentage }}% match</span>
+                            </div>
+                            
+                            <!-- Action Buttons (Find Doctors & DELETE) -->
+                            <div class="history-actions">
+                                <a href="{{ url_for('find_doctors', assessment_id=assessment.assessment_id) }}" 
+                                   class="btn btn-small btn-secondary">
+                                    👨‍⚕️ Find Doctors
+                                </a>
+                                
+                                <form method="POST" action="{{ url_for('delete_assessment', assessment_id=assessment.assessment_id) }}" 
+                                      style="display: inline;" 
+                                      onsubmit="return confirm('Are you sure you want to delete this assessment? This action cannot be undone.');">
+                                    <button type="submit" class="btn btn-small btn-danger">
+                                        🗑️ Delete
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -52,7 +85,8 @@
             {% else %}
                 <div class="empty-state">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" stroke-width="2"/>
+                        <path d="M9 11l3 3L22 4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                     <h3>No assessments yet</h3>
                     <p>Start your first health assessment</p>

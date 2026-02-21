@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome - Medical Risk Assessment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="loading-page">
+    <div class="loading-container">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" stroke-width="2"/>
+                    <path d="M9 12l2 2 4-4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <h1 class="loading-title">Medical Risk Assessment</h1>
+            <p class="loading-subtitle">Preparing your dashboard...</p>
+            <div class="loading-spinner">
+                <div class="spinner-dot"></div>
+                <div class="spinner-dot"></div>
+                <div class="spinner-dot"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Redirect to dashboard after 2 seconds
+        setTimeout(function() {
+            window.location.href = "{{ url_for('dashboard') }}";
+        }, 2000);
+    </script>
+</body>
+</html>

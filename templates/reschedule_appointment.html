@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reschedule Appointment - Medical Risk Assessment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="dashboard-body">
+    <nav class="navbar">
+        <div class="nav-brand">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" stroke-width="2"/>
+            </svg>
+            <span>Medical Risk Assessment</span>
+        </div>
+        <div class="nav-menu">
+            <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+            <a href="{{ url_for('my_appointments') }}" class="nav-link">My Appointments</a>
+            <a href="{{ url_for('logout') }}" class="btn btn-outline">Logout</a>
+        </div>
+    </nav>
+
+    <div class="dashboard-content">
+        <div class="reschedule-container">
+            <div class="page-header">
+                <h1>📅 Reschedule Appointment</h1>
+                <p>Appointment #{{ appointment.appointment_id }}</p>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="reschedule-layout">
+                <!-- Current Appointment Info -->
+                <div class="current-appointment-card">
+                    <h3>Current Appointment</h3>
+                    <div class="appointment-detail">
+                        <strong>Doctor:</strong> {{ appointment.doctor_name }}
+                    </div>
+                    <div class="appointment-detail">
+                        <strong>Specialization:</strong> {{ appointment.specialization_name }}
+                    </div>
+                    <div class="appointment-detail">
+                        <strong>Current Date:</strong> {{ appointment.appointment_date.strftime('%B %d, %Y') }}
+                    </div>
+                    <div class="appointment-detail">
+                        <strong>Disease:</strong> {{ appointment.disease_name }}
+                    </div>
+                </div>
+
+                <!-- Reschedule Form -->
+                <div class="reschedule-form-card">
+                    <h3>New Date & Time</h3>
+                    <form method="POST" action="{{ url_for('reschedule_appointment', appointment_id=appointment.appointment_id) }}">
+                        <div class="form-group">
+                            <label for="appointment_date">New Appointment Date</label>
+                            <input type="date" id="appointment_date" name="appointment_date" 
+                                   min="{{ min_date }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="appointment_time">New Time Slot</label>
+                            <select id="appointment_time" name="appointment_time" required>
+                                <option value="">Select Time Slot</option>
+                                <option value="09:00:00">09:00 AM</option>
+                                <option value="10:00:00">10:00 AM</option>
+                                <option value="11:00:00">11:00 AM</option>
+                                <option value="12:00:00">12:00 PM</option>
+                                <option value="14:00:00">02:00 PM</option>
+                                <option value="15:00:00">03:00 PM</option>
+                                <option value="16:00:00">04:00 PM</option>
+                                <option value="17:00:00">05:00 PM</option>
+                                <option value="18:00:00">06:00 PM</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="notes">Additional Notes (Optional)</label>
+                            <textarea id="notes" name="notes" rows="4" 
+                                      placeholder="Any changes or additional information...">{{ appointment.notes }}</textarea>
+                        </div>
+
+                        <div class="warning-box">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                                <path d="M12 8v4M12 16h.01" stroke-width="2"/>
+                            </svg>
+                            <p>Rescheduling will change your appointment status to "Pending" and requires confirmation from the doctor.</p>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                ✅ Confirm Reschedule
+                            </button>
+                            <a href="{{ url_for('my_appointments') }}" class="btn btn-secondary">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

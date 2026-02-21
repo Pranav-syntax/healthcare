@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports & Analytics - Medical Risk Assessment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="dashboard-body">
+    <nav class="navbar">
+        <div class="nav-brand">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" stroke-width="2"/>
+            </svg>
+            <span>Medical Risk Assessment</span>
+        </div>
+        <div class="nav-menu">
+            <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+            <a href="{{ url_for('logout') }}" class="btn btn-outline">Logout</a>
+        </div>
+    </nav>
+
+    <div class="dashboard-content">
+        <div class="reports-container">
+            <div class="page-header">
+                <h1>📊 Reports & Analytics</h1>
+                <p>System-wide statistics and insights</p>
+            </div>
+
+            <!-- AGGREGATE FUNCTION: COUNT - Total Statistics -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-content">
+                        <h3>{{ totals.total_users }}</h3>
+                        <p>Total Users</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🩺</div>
+                    <div class="stat-content">
+                        <h3>{{ totals.total_assessments }}</h3>
+                        <p>Health Assessments</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-content">
+                        <h3>{{ totals.total_appointments }}</h3>
+                        <p>Appointments Booked</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">👨‍⚕️</div>
+                    <div class="stat-content">
+                        <h3>{{ totals.total_doctors }}</h3>
+                        <p>Doctors Available</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AGGREGATE FUNCTION: COUNT + GROUP BY - Disease Frequency -->
+            <div class="report-section">
+                <h2>🦠 Disease Frequency (GROUP BY + COUNT)</h2>
+                <div class="table-responsive">
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th>Disease</th>
+                                <th>Total Cases</th>
+                                <th>Distribution</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for disease in disease_stats %}
+                            <tr>
+                                <td><strong>{{ disease.predicted_disease }}</strong></td>
+                                <td>{{ disease.count }}</td>
+                                <td>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: {{ (disease.count / disease_stats[0].count * 100)|round }}%"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- AGGREGATE FUNCTION: AVG + GROUP BY - Average Match Percentage -->
+            <div class="report-section">
+                <h2>📈 Average Match Percentage by Disease (AVG + GROUP BY)</h2>
+                <div class="table-responsive">
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th>Disease</th>
+                                <th>Avg Match %</th>
+                                <th>Total Cases</th>
+                                <th>Accuracy</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for stat in avg_match_stats %}
+                            <tr>
+                                <td><strong>{{ stat.predicted_disease }}</strong></td>
+                                <td>{{ "%.2f"|format(stat.avg_match) }}%</td>
+                                <td>{{ stat.total_cases }}</td>
+                                <td>
+                                    <span class="accuracy-badge {% if stat.avg_match >= 80 %}high{% elif stat.avg_match >= 60 %}medium{% else %}low{% endif %}">
+                                        {% if stat.avg_match >= 80 %}High
+                                        {% elif stat.avg_match >= 60 %}Medium
+                                        {% else %}Low{% endif %}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- AGGREGATE FUNCTION: COUNT + GROUP BY - Appointment Status -->
+            <div class="report-section">
+                <h2>📋 Appointment Status Distribution (GROUP BY + COUNT)</h2>
+                <div class="status-grid">
+                    {% for status in appointment_status_stats %}
+                    <div class="status-card status-{{ status.status.lower() }}">
+                        <h3>{{ status.count }}</h3>
+                        <p>{{ status.status }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- AGGREGATE FUNCTION: ORDER BY + LIMIT - Top Doctors -->
+            <div class="report-section">
+                <h2>⭐ Top Rated Doctors (ORDER BY + LIMIT)</h2>
+                <div class="table-responsive">
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Doctor Name</th>
+                                <th>Specialization</th>
+                                <th>City</th>
+                                <th>Rating</th>
+                                <th>Reviews</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for doctor in top_doctors %}
+                            <tr>
+                                <td>
+                                    {% if loop.index == 1 %}🥇
+                                    {% elif loop.index == 2 %}🥈
+                                    {% elif loop.index == 3 %}🥉
+                                    {% else %}{{ loop.index }}{% endif %}
+                                </td>
+                                <td><strong>{{ doctor.full_name }}</strong></td>
+                                <td>{{ doctor.specialization_name }}</td>
+                                <td>{{ doctor.city }}</td>
+                                <td>⭐ {{ doctor.rating }}</td>
+                                <td>{{ doctor.total_reviews }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- VIEW: High Risk Patients -->
+            <div class="report-section">
+                <h2>⚠️ High Risk Patients (VIEW)</h2>
+                <p class="section-description">Patients with match percentage > 70%</p>
+                <div class="table-responsive">
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Name</th>
+                                <th>Age</th>
+                                <th>Disease</th>
+                                <th>Match %</th>
+                                <th>Assessment Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for patient in high_risk %}
+                            <tr>
+                                <td>{{ patient.user_id }}</td>
+                                <td>{{ patient.full_name }}</td>
+                                <td>{{ patient.age }}</td>
+                                <td><strong>{{ patient.predicted_disease }}</strong></td>
+                                <td>
+                                    <span class="risk-badge high">{{ patient.match_percentage }}%</span>
+                                </td>
+                                <td>{{ patient.assessment_date.strftime('%b %d, %Y') }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- VIEW: Doctor Workload -->
+            <div class="report-section">
+                <h2>💼 Doctor Workload Statistics (VIEW)</h2>
+                <div class="table-responsive">
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th>Doctor</th>
+                                <th>Specialization</th>
+                                <th>Location</th>
+                                <th>Total</th>
+                                <th>Pending</th>
+                                <th>Confirmed</th>
+                                <th>Completed</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for doctor in doctor_workload %}
+                            <tr>
+                                <td><strong>{{ doctor.full_name }}</strong></td>
+                                <td>{{ doctor.specialization_name }}</td>
+                                <td>{{ doctor.city }}, {{ doctor.state }}</td>
+                                <td>{{ doctor.total_appointments }}</td>
+                                <td>{{ doctor.pending_appointments }}</td>
+                                <td>{{ doctor.confirmed_appointments }}</td>
+                                <td>{{ doctor.completed_appointments }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- VIEW: Disease Statistics -->
+            <div class="report-section">
+                <h2>📊 Disease Statistics Overview (VIEW)</h2>
+                <div class="table-responsive">
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th>Disease</th>
+                                <th>Assessments</th>
+                                <th>Unique Patients</th>
+                                <th>Avg Match %</th>
+                                <th>Appointments</th>
+                                <th>First Reported</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for disease in disease_statistics %}
+                            <tr>
+                                <td><strong>{{ disease.predicted_disease }}</strong></td>
+                                <td>{{ disease.total_assessments }}</td>
+                                <td>{{ disease.unique_patients }}</td>
+                                <td>{{ "%.2f"|format(disease.avg_match_percentage) }}%</td>
+                                <td>{{ disease.appointments_booked }}</td>
+                                <td>{{ disease.first_reported.strftime('%b %d, %Y') if disease.first_reported else 'N/A' }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

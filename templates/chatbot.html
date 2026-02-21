@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Medical Assistant - Medical Risk Assessment</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="dashboard-body">
+    <nav class="navbar">
+        <div class="nav-brand">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" stroke-width="2"/>
+            </svg>
+            <span>Medical Risk Assessment</span>
+        </div>
+        <div class="nav-menu">
+            <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+            
+            {% if session.get('is_admin') %}
+            <a href="{{ url_for('admin_panel') }}" class="nav-link">🔧 Admin Panel</a>
+            <a href="{{ url_for('reports') }}" class="nav-link">📊 Reports</a>
+            {% endif %}
+            
+            <a href="{{ url_for('logout') }}" class="btn btn-outline">Logout</a>
+        </div>
+    </nav>
+
+    <div class="dashboard-content">
+        <div class="chatbot-container">
+            <div class="chatbot-header">
+                <div class="chatbot-title">
+                    <div class="bot-avatar">🤖</div>
+                    <div>
+                        <h1>AI Medical Assistant</h1>
+                        <p class="bot-status"><span class="status-dot"></span> Online</p>
+                    </div>
+                </div>
+                <button id="clearChat" class="btn btn-secondary btn-small">
+                    🗑️ Clear Chat
+                </button>
+            </div>
+
+            <div class="chatbot-info-banner">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                    <path d="M12 16v-4M12 8h.01" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <p>This AI assistant provides general health information. Always consult a healthcare professional for medical advice.</p>
+            </div>
+
+            <div id="chatMessages" class="chat-messages">
+                <div class="message bot-message">
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">
+                        <p>Hello! I'm your AI Medical Assistant. I can help you understand diseases, symptoms, and health conditions.</p>
+                        <p>You can ask me questions like:</p>
+                        <ul>
+                            <li>"What is a brain hemorrhage?"</li>
+                            <li>"What are common symptoms of stroke?"</li>
+                            <li>"When should I see a doctor for headaches?"</li>
+                            <li>"How can I prevent paralysis?"</li>
+                        </ul>
+                        <p>How can I help you today?</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input-container">
+                <form id="chatForm">
+                    <div class="chat-input-wrapper">
+                        <input 
+                            type="text" 
+                            id="userMessage" 
+                            placeholder="Ask me about diseases, symptoms, or health conditions..." 
+                            autocomplete="off"
+                            required
+                        >
+                        <button type="submit" id="sendButton" class="send-button">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+                <div class="quick-questions">
+                    <button class="quick-btn" data-question="What is a brain hemorrhage?">What is a brain hemorrhage?</button>
+                    <button class="quick-btn" data-question="What are symptoms of stroke?">Symptoms of stroke?</button>
+                    <button class="quick-btn" data-question="When should I see a doctor?">When to see a doctor?</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chatMessages = document.getElementById('chatMessages');
+        const chatForm = document.getElementById('chatForm');
+        const userMessageInput = document.getElementById('userMessage');
+        const sendButton = document.getElementById('sendButton');
+        const clearChatBtn = document.getElementById('clearChat');
+
+        // Auto-scroll to bottom
+        function scrollToBottom() {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Add message to chat
+        function addMessage(message, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.textContent = isUser ? '👤' : '🤖';
+            
+            const content = document.createElement('div');
+            content.className = 'message-content';
+            
+            // Convert markdown-style formatting to HTML
+            const formattedMessage = message
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n/g, '<br>');
+            
+            content.innerHTML = `<p>${formattedMessage}</p>`;
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(content);
+            chatMessages.appendChild(messageDiv);
+            
+            scrollToBottom();
+        }
+
+        // Add typing indicator
+        function showTyping() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message bot-message typing-indicator';
+            typingDiv.id = 'typingIndicator';
+            
+            typingDiv.innerHTML = `
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                    <div class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            `;
+            
+            chatMessages.appendChild(typingDiv);
+            scrollToBottom();
+        }
+
+        function hideTyping() {
+            const typing = document.getElementById('typingIndicator');
+            if (typing) typing.remove();
+        }
+
+        // Send message
+        async function sendMessage(message) {
+            if (!message.trim()) return;
+
+            // Add user message
+            addMessage(message, true);
+            userMessageInput.value = '';
+            
+            // Disable input
+            sendButton.disabled = true;
+            userMessageInput.disabled = true;
+            
+            // Show typing
+            showTyping();
+
+            try {
+                const response = await fetch('/chatbot/send', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+
+                const data = await response.json();
+                
+                hideTyping();
+
+                if (data.success) {
+                    addMessage(data.response, false);
+                } else {
+                    addMessage('Sorry, I encountered an error. Please try again.', false);
+                }
+            } catch (error) {
+                hideTyping();
+                addMessage('Sorry, I couldn\'t connect to the server. Please check your connection.', false);
+                console.error('Error:', error);
+            } finally {
+                sendButton.disabled = false;
+                userMessageInput.disabled = false;
+                userMessageInput.focus();
+            }
+        }
+
+        // Form submit
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const message = userMessageInput.value;
+            sendMessage(message);
+        });
+
+        // Quick questions
+        document.querySelectorAll('.quick-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const question = btn.getAttribute('data-question');
+                userMessageInput.value = question;
+                sendMessage(question);
+            });
+        });
+
+        // Clear chat
+        clearChatBtn.addEventListener('click', async () => {
+            if (confirm('Are you sure you want to clear the chat history?')) {
+                try {
+                    await fetch('/chatbot/clear', { method: 'POST' });
+                    chatMessages.innerHTML = `
+                        <div class="message bot-message">
+                            <div class="message-avatar">🤖</div>
+                            <div class="message-content">
+                                <p>Chat cleared! How can I help you today?</p>
+                            </div>
+                        </div>
+                    `;
+                } catch (error) {
+                    console.error('Error clearing chat:', error);
+                }
+            }
+        });
+
+        // Auto-focus input
+        userMessageInput.focus();
+    </script>
+</body>
+</html>

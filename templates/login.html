@@ -9,19 +9,14 @@
 <body>
     <div class="auth-container">
         <div class="auth-box">
-            <!-- Header -->
             <div class="auth-header">
-                <div class="icon-wrapper">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M9 12l2 2 4-4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </div>
+                <svg class="auth-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" stroke-width="2"/>
+                </svg>
                 <h1>Welcome Back</h1>
-                <p>Login to access your health dashboard</p>
+                <p>Login to your health dashboard</p>
             </div>
 
-            <!-- Flash Messages -->
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}
@@ -32,11 +27,10 @@
                 {% endif %}
             {% endwith %}
 
-            <!-- Login Form -->
             <form method="POST" action="{{ url_for('login') }}" class="auth-form">
                 <div class="form-group">
                     <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" placeholder="your@email.com" required autofocus>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
                 </div>
 
                 <div class="form-group">
@@ -44,17 +38,14 @@
                     <input type="password" id="password" name="password" placeholder="Enter your password" required>
                 </div>
 
-                <button type="submit" class="btn btn-primary">
-                    <span>Login</span>
-                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path d="M5 12h14M12 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </button>
+                <button type="submit" class="btn btn-primary btn-block">Login</button>
             </form>
 
-            <!-- Footer -->
-            <div class="auth-footer">
+            <div class="auth-links">
                 <p>Don't have an account? <a href="{{ url_for('signup') }}">Sign Up</a></p>
+                <p class="admin-login-text">
+                    <a href="{{ url_for('admin_login') }}" class="admin-text-link">🔧 Administrator Login</a>
+                </p>
             </div>
         </div>
     </div>

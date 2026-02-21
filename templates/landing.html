@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Risk Assessment - Your Health, Our Priority</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="landing-page">
+    <!-- Navigation -->
+    <nav class="landing-nav">
+        <div class="landing-nav-container">
+            <div class="landing-brand">
+                <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" stroke-width="2"/>
+                    <path d="M9 12l2 2 4-4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Medical Risk Assessment</span>
+            </div>
+            <div class="landing-nav-menu">
+                <a href="#features" class="landing-nav-link">Features</a>
+                <a href="#how-it-works" class="landing-nav-link">How It Works</a>
+                <a href="#about" class="landing-nav-link">About</a>
+                <a href="{{ url_for('login') }}" class="btn btn-outline-white">Login</a>
+                <a href="{{ url_for('signup') }}" class="btn btn-primary">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-dot"></span>
+                    Trusted by thousands of users
+                </div>
+                <h1 class="hero-title">
+                    Your Health,<br>
+                    <span class="gradient-text">Our Priority</span>
+                </h1>
+                <p class="hero-description">
+                    Advanced AI-powered medical risk assessment system. Get instant health insights, 
+                    find specialized doctors, and take control of your well-being.
+                </p>
+                <div class="hero-buttons">
+                    <a href="{{ url_for('signup') }}" class="btn btn-hero-primary">
+                        Start Free Assessment
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M5 12h14M12 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
+                    <a href="#how-it-works" class="btn btn-hero-secondary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                            <polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/>
+                        </svg>
+                        Learn More
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">10K+</div>
+                        <div class="stat-label">Assessments</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">500+</div>
+                        <div class="stat-label">Doctors</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">98%</div>
+                        <div class="stat-label">Accuracy</div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-illustration">
+                <div class="illustration-card card-1">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">Health Monitoring</div>
+                        <div class="card-value">Active</div>
+                    </div>
+                </div>
+                <div class="illustration-card card-2">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M9 11l3 3L22 4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">Risk Assessment</div>
+                        <div class="card-value">95% Match</div>
+                    </div>
+                </div>
+                <div class="illustration-card card-3">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke-width="2"/>
+                            <circle cx="9" cy="7" r="4" stroke-width="2"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-title">Expert Doctors</div>
+                        <div class="card-value">500+ Available</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-wave">
+            <svg viewBox="0 0 1440 120" fill="none" preserveAspectRatio="none">
+                <path d="M0,64L48,69.3C96,75,192,85,288,80C384,75,480,53,576,48C672,43,768,53,864,58.7C960,64,1056,64,1152,58.7C1248,53,1344,43,1392,37.3L1440,32L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z" fill="white"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section">
+        <div class="container">
+            <div class="section-header-center">
+                <h2>Powerful Features for Your Health</h2>
+                <p>Everything you need to manage your health in one place</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon feature-icon-blue">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M9 11l3 3L22 4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h3>Smart Symptom Checker</h3>
+                    <p>Advanced AI analyzes your symptoms to predict potential health conditions with high accuracy</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon feature-icon-green">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke-width="2"/>
+                            <circle cx="9" cy="7" r="4" stroke-width="2"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h3>Find Specialists</h3>
+                    <p>Connect with qualified doctors specialized in treating your specific condition</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon feature-icon-purple">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke-width="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6" stroke-width="2"/>
+                            <line x1="8" y1="2" x2="8" y2="6" stroke-width="2"/>
+                            <line x1="3" y1="10" x2="21" y2="10" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h3>Easy Appointments</h3>
+                    <p>Book, manage, and track your medical appointments seamlessly in one place</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon feature-icon-orange">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h3>AI Medical Assistant</h3>
+                    <p>Get instant answers to your health questions from our intelligent chatbot</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon feature-icon-red">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <rect x="3" y="3" width="18" height="18" rx="2" stroke-width="2"/>
+                            <path d="M9 9h6M9 13h6M9 17h4" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h3>Health History</h3>
+                    <p>Track your health assessments over time and monitor your wellness journey</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon feature-icon-teal">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h3>Secure & Private</h3>
+                    <p>Your health data is encrypted and protected with industry-standard security</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="how-it-works-section">
+        <div class="container">
+            <div class="section-header-center">
+                <h2>How It Works</h2>
+                <p>Get started in just 3 simple steps</p>
+            </div>
+            <div class="steps-container">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke-width="2"/>
+                            <circle cx="8.5" cy="7" r="4" stroke-width="2"/>
+                            <line x1="20" y1="8" x2="20" y2="14" stroke-width="2" stroke-linecap="round"/>
+                            <line x1="23" y1="11" x2="17" y2="11" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h3>Create Account</h3>
+                    <p>Sign up in seconds with just your email and basic information</p>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M9 11l3 3L22 4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h3>Enter Symptoms</h3>
+                    <p>Select your symptoms from our comprehensive checklist</p>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>Get Results</h3>
+                    <p>Receive instant analysis and connect with specialists</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Take Control of Your Health?</h2>
+                <p>Join thousands of users who trust our platform for their health needs</p>
+                <a href="{{ url_for('signup') }}" class="btn btn-cta">
+                    Get Started Free
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M5 12h14M12 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="landing-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <svg class="footer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" stroke-width="2"/>
+                    </svg>
+                    <span>Medical Risk Assessment</span>
+                </div>
+                <div class="footer-text">
+                    <p>&copy; 2026 Medical Risk Assessment. All rights reserved.</p>
+                    <p>Your health, our priority. Always consult with healthcare professionals.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
